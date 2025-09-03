@@ -23,12 +23,46 @@ void file_input() {
 
 
 void solve(){
-    ll n;   cin>>n;
-    ll ans=1;
-    for(ll i=1 ; i<=n ; i++){
-        ans= (ans%mod * 2) % mod;
+    ll n, m;    cin>>n>>m;
+    ll s=1, d=n;    //cin>>s>>d;
+    vector<ll> adj[n+1];
+    for(ll i=0 ; i<m ; i++){
+        ll u, v;    cin>>u>>v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
     }
-    cout<<ans<<endl;
+    vector<ll> p(n+1, -1);
+    vector<ll> dist(n+1, inf);
+    queue<ll> q;
+    q.push(s);
+    dist[s]=0;
+    while(!q.empty()){
+        ll u= q.front();
+        q.pop();
+        for(ll v: adj[u]){
+            if(dist[v]==inf){
+                q.push(v);
+                p[v]=u;
+                dist[v]=dist[u]+1;
+            }
+        }
+    }
+    if(dist[d]==inf){
+        cout<<"IMPOSSIBLE"<<endl;
+    }
+    else{
+        //cout<<dist[d]<<endl;
+        vector<ll> path;
+        path.push_back(d);
+        ll cur= d;
+        while(p[cur]!=-1){
+            path.push_back(p[cur]);
+            cur= p[cur];
+        }
+        cout<<path.size()<<endl;
+        for(ll i=path.size()-1 ; i>=0 ; i--) cout<<path[i]<<' ';
+        cout<<endl;
+    }
 }
 
 int main()
